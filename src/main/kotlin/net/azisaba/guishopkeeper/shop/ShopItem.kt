@@ -99,7 +99,12 @@ data class ShopItemMythic(
     }
 
     override fun getBukkitItem(): ItemStack =
-        MythicMobs.inst().itemManager.getItemStack(type)?.asNMSCopy()?.asCraftMirror()
+        MythicMobs.inst()
+            .itemManager
+            .getItemStack(type)
+            ?.asNMSCopy()
+            ?.asCraftMirror()
+            ?.apply { this.amount = this@ShopItemMythic.amount }
             ?: error("mythic item $type is not loaded")
 
     override fun accepts(itemStack: ItemStack?): Boolean =
