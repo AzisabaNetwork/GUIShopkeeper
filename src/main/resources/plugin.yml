@@ -1,0 +1,11 @@
+name: GUIShopkeeper
+version: @version@
+main: net.azisaba.guishopkeeper.GUIShopkeeperPlugin
+api-version: 1.15
+depend:
+  - MythicMobs
+  - PacketAPI
+commands:
+  guishopkeeper:
+    permission: guishopkeeper.command.guishopkeeper
+    aliases: ["guishopkeepers"]
