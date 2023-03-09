@@ -14,13 +14,16 @@ import java.lang.ref.WeakReference
 class Shopkeepers(private val plugin: GUIShopkeeperPlugin) {
     private val file = File("plugins/GUIShopkeeper/shops.yml")
 
-    val config = file.let {
-        if (!it.exists()) {
-            it.parentFile.mkdirs()
-            it.writeText(Yaml.default.encodeToString(ShopkeepersData()))
+    var config: ShopkeepersData = reload()
+
+    fun reload() =
+        file.let {
+            if (!it.exists()) {
+                it.parentFile.mkdirs()
+                it.writeText(Yaml.default.encodeToString(ShopkeepersData()))
+            }
+            Yaml.default.decodeFromString(ShopkeepersData.serializer(), it.readText()).apply { config = this }
         }
-        Yaml.default.decodeFromString(ShopkeepersData.serializer(), it.readText())
-    }
 
     private val entities = mutableListOf<ShopkeeperEntity>()
 

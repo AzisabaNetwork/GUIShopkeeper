@@ -73,6 +73,11 @@ class GUIShopkeeperCommand(private val plugin: GUIShopkeeperPlugin) : TabExecuto
                 plugin.shopkeepers.getEntityOf(shop)?.teleport(player.location)
                 sender.sendMessage("${ChatColor.GREEN}NPCをあなたにテレポートさせました。")
             }
+            "reload" -> {
+                plugin.shopkeepers.reload()
+                plugin.shopkeepers.respawn()
+                sender.sendMessage("${ChatColor.GREEN}リロードしました。")
+            }
         }
         return true
     }
@@ -84,7 +89,7 @@ class GUIShopkeeperCommand(private val plugin: GUIShopkeeperPlugin) : TabExecuto
         args: Array<out String>
     ): List<String>? {
         if (args.size == 1) {
-            return listOf("create", "respawn", "find", "settings", "movehere")
+            return listOf("create", "respawn", "find", "settings", "movehere", "reload")
                 .filter { sender.hasPermission("guishopkeeper.command.guishopkeeper.$it") }
                 .filter(args[0])
         }
