@@ -30,6 +30,12 @@ class ShopNPCSettingsScreen(
             .lore("${ChatColor.YELLOW}現在の名前: ${ChatColor.GREEN}${settingsScreen.shop.name}")
             .build())
 
+        // free trade
+        inv.setItem(2, ItemBuilder(Material.CHEST)
+            .name("${ChatColor.GOLD}コストが空の場合に無料で取引できるようにする")
+            .lore("${ChatColor.YELLOW}現在の設定: ${ChatColor.GREEN}${settingsScreen.shop.allowFreeTrade}")
+            .build())
+
         settingsScreen.shop.entityData.createSettingsGuiSlots().forEachIndexed { index, slot ->
             inv.setItem(index + 9, slot.itemStack)
             optionSlots[index + 9] = slot
@@ -81,6 +87,11 @@ class ShopNPCSettingsScreen(
                             screen.settingsScreen.player.openInventory(screen.inv)
                         }
                     }
+                }
+                2 -> {
+                    screen.settingsScreen.shop.allowFreeTrade = !screen.settingsScreen.shop.allowFreeTrade
+                    screen.settingsScreen.plugin.async { screen.settingsScreen.plugin.shopkeepers.save() }
+                    screen.reset()
                 }
                 35 -> {
                     screen.settingsScreen.plugin.shopkeepers.config.shops.removeIf { it.id == screen.settingsScreen.shop.id }

@@ -3,6 +3,7 @@ package net.azisaba.guishopkeeper.shop
 import kotlinx.serialization.Serializable
 import net.azisaba.guishopkeeper.shop.entity.ShopEntityData
 import net.azisaba.guishopkeeper.util.SerializableLocation
+import net.azisaba.guishopkeeper.util.lastIndexOf
 import org.bukkit.entity.EntityType
 import java.util.UUID
 
@@ -13,6 +14,7 @@ data class ShopData(
     var entityType: EntityType,
     var entityData: ShopEntityData = ShopEntityData.createData(entityType),
     val trades: MutableList<ShopTradeData> = mutableListOf(),
+    var allowFreeTrade: Boolean = false,
     val id: String = UUID.randomUUID().toString(),
 ) {
     /**
@@ -24,5 +26,14 @@ data class ShopData(
             trades.add(ShopTradeDataEmpty)
         }
         trades[index] = trade
+    }
+
+    fun trimTrades() {
+        val lastNonEmpty = trades.lastIndexOf { it !is ShopTradeDataEmpty }
+        if (lastNonEmpty == -1) {
+            trades.clear()
+        } else {
+            trades.subList(lastNonEmpty + 1, trades.size).clear()
+        }
     }
 }

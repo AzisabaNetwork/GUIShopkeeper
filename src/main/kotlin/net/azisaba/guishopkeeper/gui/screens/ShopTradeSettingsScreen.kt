@@ -30,6 +30,9 @@ class ShopTradeSettingsScreen(
     }
 
     fun reset() {
+        for (i in 0..53) {
+            inv.setItem(i, null)
+        }
         // background
         fillBorder(blackBackgroundItem)
 

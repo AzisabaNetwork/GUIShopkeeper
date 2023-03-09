@@ -48,6 +48,7 @@ sealed interface ShopItem {
     }
 }
 
+@Serializable
 object ShopItemAir : ShopItem {
     override var amount = 0
 

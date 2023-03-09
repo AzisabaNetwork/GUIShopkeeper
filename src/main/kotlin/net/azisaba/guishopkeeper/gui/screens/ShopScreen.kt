@@ -1,12 +1,11 @@
 package net.azisaba.guishopkeeper.gui.screens
 
-import net.azisaba.guishopkeeper.GUIShopkeeperPlugin
 import net.azisaba.guishopkeeper.item.ItemBuilder
 import net.azisaba.guishopkeeper.shop.ShopData
 import net.azisaba.guishopkeeper.shop.ShopItemAir
-import net.azisaba.guishopkeeper.shop.ShopTradeDataEmpty
 import net.azisaba.guishopkeeper.shop.ShopTradeDataItem
 import net.azisaba.guishopkeeper.util.addLore
+import net.azisaba.guishopkeeper.util.isEmpty
 import net.azisaba.guishopkeeper.util.toFriendlyName
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
@@ -27,15 +26,18 @@ class ShopScreen(private val shopData: ShopData, private val player: Player) : S
     }
 
     fun reset() {
+        for (i in 0..53) {
+            inv.setItem(i, null)
+        }
         // background
         fillBorder(blackBackgroundItem)
 
         // trades
         shopData.trades.subList(27 * page, min(27 + page * 27, shopData.trades.size))
-            .filter { it !is ShopTradeDataEmpty }
             .forEachIndexed { index, trade ->
                 // exclude dummy trades
                 if (trade is ShopTradeDataItem) {
+                    if (trade.isPriceEmpty() && !shopData.allowFreeTrade) return@forEachIndexed
                     inv.setItem(ShopSettingsScreen.guiIndexes[index]!!, trade.result.getBukkitItem().apply {
                         itemMeta = itemMeta.apply {
                             addLore("")
@@ -72,6 +74,7 @@ class ShopScreen(private val shopData: ShopData, private val player: Player) : S
             e.isCancelled = true
             val screen = e.inventory.holder as ShopScreen
             if (e.slot in 10..43) {
+                if (e.currentItem.isEmpty()) return
                 val index = ShopSettingsScreen.reverseGuiIndexes[e.slot] ?: return
                 val trade = screen.shopData.trades.getOrNull(index + screen.page * 27) as? ShopTradeDataItem ?: return
                 if (screen.player.inventory.firstEmpty() == -1) {

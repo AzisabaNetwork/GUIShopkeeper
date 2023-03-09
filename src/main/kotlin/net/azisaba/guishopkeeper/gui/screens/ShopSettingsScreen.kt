@@ -27,6 +27,10 @@ class ShopSettingsScreen(val plugin: GUIShopkeeperPlugin, val shop: ShopData, va
     }
 
     fun reset() {
+        for (i in 0..53) {
+            inv.setItem(i, null)
+        }
+
         fillBorder(blackBackgroundItem)
 
         // trades
@@ -66,7 +70,7 @@ class ShopSettingsScreen(val plugin: GUIShopkeeperPlugin, val shop: ShopData, va
             e.isCancelled = true
             val screen = e.inventory.holder as ShopSettingsScreen
             if (e.slot in 10..43) {
-                val index = reverseGuiIndexes[e.slot] ?: return
+                val index = (reverseGuiIndexes[e.slot] ?: return) + screen.page * 27
                 if (!e.cursor.isEmpty() && e.currentItem.isEmpty()) {
                     screen.shop.setTradeAt(index, ShopTradeDataItem(ShopItemVanilla.fromBukkitItem(e.cursor!!)))
                     screen.plugin.async { screen.plugin.shopkeepers.save() }
@@ -85,7 +89,7 @@ class ShopSettingsScreen(val plugin: GUIShopkeeperPlugin, val shop: ShopData, va
                 } else if (e.click == ClickType.SHIFT_RIGHT) {
                     // remove trade
                     screen.shop.trades[index] = ShopTradeDataEmpty
-                    screen.inv.setItem(e.slot, null)
+                    screen.shop.trimTrades()
                     screen.plugin.async { screen.plugin.shopkeepers.save() }
                     screen.reset()
                 }
