@@ -53,8 +53,8 @@ class ShopNPCSettingsScreen(
         fun onClick(e: InventoryClickEvent) {
             // Ignore if unrelated inventory is opened
             if (e.inventory.holder !is ShopNPCSettingsScreen) return
-            if (e.clickedInventory?.holder !is ShopNPCSettingsScreen) return
             e.isCancelled = true
+            if (e.clickedInventory?.holder !is ShopNPCSettingsScreen) return
             val screen = e.inventory.holder as ShopNPCSettingsScreen
             val settingsScreen = screen.settingsScreen
             screen.optionSlots[e.slot]?.let { slot ->

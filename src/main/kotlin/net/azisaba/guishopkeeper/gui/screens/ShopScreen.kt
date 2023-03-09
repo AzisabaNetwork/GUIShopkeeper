@@ -70,8 +70,8 @@ class ShopScreen(private val shopData: ShopData, private val player: Player) : S
         @EventHandler
         fun onClick(e: InventoryClickEvent) {
             if (e.inventory.holder !is ShopScreen) return
-            if (e.clickedInventory?.holder !is ShopScreen) return
             e.isCancelled = true
+            if (e.clickedInventory?.holder !is ShopScreen) return
             val screen = e.inventory.holder as ShopScreen
             if (e.slot in 10..43) {
                 if (e.currentItem.isEmpty()) return
