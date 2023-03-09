@@ -43,7 +43,12 @@ class GUIShopkeeperCommand(private val plugin: GUIShopkeeperPlugin) : TabExecuto
             }
             "find" -> {
                 val radius = args.getOrNull(1)?.toIntOrNull() ?: 10
-                val shops = plugin.shopkeepers.config.shops.filter { it.location.toBukkit().distance(player.location) <= radius }
+                val shops =
+                    plugin.shopkeepers
+                        .config
+                        .shops
+                        .filter { it.location.toBukkit().world == player.world }
+                        .filter { it.location.toBukkit().distance(player.location) <= radius }
                 sender.sendMessage("${ChatColor.GOLD}半径${radius}ブロック以内にあるShop:")
                 shops.forEach {
                     sender.sendMessage("${ChatColor.GRAY}- ${ChatColor.GREEN}${it.name} ${ChatColor.GRAY}(${it.entityType.name}) (ID: ${it.id})")
